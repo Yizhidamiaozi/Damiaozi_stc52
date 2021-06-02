@@ -1,0 +1,110 @@
+C51 COMPILER V9.00   FINDWAY                                                               05/30/2021 17:14:17 PAGE 1   
+
+
+C51 COMPILER V9.00, COMPILATION OF MODULE FINDWAY
+OBJECT MODULE PLACED IN ..\out\findway.obj
+COMPILER INVOKED BY: D:\Keil\C51\BIN\C51.EXE ..\src\findway.c BROWSE INCDIR(..\inc) DEBUG OBJECTEXTEND PRINT(.\findway.l
+                    -st) OBJECT(..\out\findway.obj)
+
+line level    source
+
+   1          #include<config.h>
+   2          #include<findway.h>
+   3          #include<STEENG.h>
+   4          #include<motor.h>
+   5          
+   6          int8 motor=0;
+   7          int8 STE=0;
+   8          
+   9          void Findway_Init(){
+  10   1              P2=0xff;           //P2设置为输入模式
+  11   1      }
+  12          void Findway_PID(){
+  13   1              uchar flatN=0;
+  14   1              uint8 Q;
+  15   1              if(Q!=P2) flatN++;
+  16   1              Q = P2;
+  17   1              if(Timer()<30&&flatN>3){ //10*20ms下    循迹超过3次变化
+  18   2                      STE--;
+  19   2                      if(STE<-2)STE=-3;
+  20   2                      motor=motor+20;
+  21   2                      if(motor>80) motor=80;  
+  22   2              }
+  23   1              if(Timer()<30&&flatN<=3){ //10*20ms下   循迹低于3次变化
+  24   2                      STE++;
+  25   2                      if(STE>3)STE=3;
+  26   2                      motor=motor-20;
+  27   2                      if(motor<0) motor=-30;  
+  28   2              }
+  29   1      }
+  30          void Findway_Deal(){
+  31   1              if(xunji_1==1&&xunji_2==1&&xunji_3==1&&xunji_4==1&&xunji_5==1){
+  32   2                      Go();
+  33   2                      Delay(230);
+  34   2                      Motor_Stop();
+  35   2              }
+  36   1              if(xunji_1==0&&xunji_2==0&&xunji_3==1&&xunji_4==0&&xunji_5==0){
+  37   2                      Go();
+  38   2                      Delay(230);
+  39   2                      Motor_Fast(30+motor);//cmd越大速度越慢
+  40   2              }
+  41   1              if(xunji_1==0&&xunji_2==1&&xunji_3==1&&xunji_4==0&&xunji_5==0){ //右转情况和直道左偏情况
+  42   2                      right(2); //SEV越大转角越大
+  43   2                      Delay(230);
+  44   2                      Motor_Go(30);//cmd越大速度越慢
+  45   2              }
+  46   1              if(xunji_1==0&&xunji_2==1&&xunji_3==0&&xunji_4==0&&xunji_5==0){ //右转情况和直道左偏情况
+  47   2                      right(2+STE); //SEV越大转角越大
+  48   2                      Delay(230);
+  49   2                      Motor_Fast(30+motor);//cmd越大速度越慢
+  50   2              }               
+  51   1              if(xunji_1==0&&xunji_2==0&&xunji_3==1&&xunji_4==1&&xunji_5==0){ //存在左转情况和直道左偏
+  52   2                      lift(2); //SEV越大转角越大
+  53   2                      Delay(230);
+  54   2                      Motor_Go(30);//cmd越大速度越慢
+C51 COMPILER V9.00   FINDWAY                                                               05/30/2021 17:14:17 PAGE 2   
+
+  55   2              }
+  56   1              if(xunji_1==0&&xunji_2==0&&xunji_3==0&&xunji_4==1&&xunji_5==0){ //存在左转情况和直道左偏
+  57   2                      lift(2+STE); //SEV越大转角越大
+  58   2                      Delay(230);
+  59   2                      Motor_Fast(30+motor);//cmd越大速度越慢
+  60   2              }
+  61   1              if(xunji_1==1&&xunji_2==1&&xunji_3==0&&xunji_4==0&&xunji_5==0){ 
+  62   2                      right(3); //SEV越大转角越大
+  63   2                      Delay(230);
+  64   2                      Motor_Slow(10);//cmd越大速度越慢
+  65   2              }
+  66   1              if(xunji_1==1&&xunji_2==0&&xunji_3==0&&xunji_4==0&&xunji_5==0){ 
+  67   2                      right(3); //SEV越大转角越大
+  68   2                      Delay(230);
+  69   2                      Motor_Slow(10+motor);//cmd越大速度越慢
+  70   2              }
+  71   1              if(xunji_1==0&&xunji_2==0&&xunji_3==0&&xunji_4==1&&xunji_5==1){ 
+  72   2                      lift(3); //SEV越大转角越大
+  73   2                      Delay(230);
+  74   2                      Motor_Slow(10);//cmd越大速度越慢
+  75   2              }
+  76   1              if(xunji_1==0&&xunji_2==0&&xunji_3==0&&xunji_4==0&&xunji_5==1){ 
+  77   2                      lift(3); //SEV越大转角越大
+  78   2                      Delay(230);
+  79   2                      Motor_Slow(10+motor);//cmd越大速度越慢
+  80   2              }
+  81   1      
+  82   1                                              
+  83   1      }
+  84          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    443    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      2       2
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

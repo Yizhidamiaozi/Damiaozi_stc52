@@ -1,0 +1,6 @@
+"..\out\main.obj",
+"..\out\STEENG.obj",
+"..\out\findway.obj",
+"..\out\motor.obj" 
+TO "..\out\Findwaycar" 
+PRINT(".\Findwaycar.m51") RAMSIZE(256) 
